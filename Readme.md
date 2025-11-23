@@ -89,3 +89,43 @@ How Dockerization helped deployment
 What I learned from GitHub Actions CI/CD automation
 
 Issues faced and how I solved them
+
+## Module 11 – Calculation Model and Validation
+
+This module extends the secure user service by adding a `Calculation` SQLAlchemy model, Pydantic schemas, and tests.
+
+### Calculation Model
+
+- Table: `calculations`
+- Fields:
+  - `id`: integer primary key
+  - `user_id`: optional FK to `users.id`
+  - `a`: float
+  - `b`: float
+  - `type`: enum (`Add`, `Sub`, `Multiply`, `Divide`)
+  - `result`: float (stored result of the operation)
+  - `created_at`: timestamp
+
+### Pydantic Schemas
+
+- `CalculationCreate`: input schema with validation
+  - Ensures that `b != 0` when `type == Divide`.
+- `CalculationRead`: output schema including `id`, `a`, `b`, `type`, `result`, `user_id`, `created_at`.
+
+### Calculation Factory
+
+File: `app/services/calculation_factory.py`
+
+- Implements `Add`, `Sub`, `Multiply`, `Divide` operations.
+- `CalculationFactory.get_operation(calc_type)` returns the correct operation object.
+
+### Running Tests
+
+```bash
+pytest -v
+
+This will run both user tests (from Module 10) and the new calculation tests.
+
+Docker Hub
+
+The GitHub Actions CI/CD pipeline builds and pushes the Docker image to Docker Hub on successful tests.
