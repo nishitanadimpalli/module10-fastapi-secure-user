@@ -89,43 +89,191 @@ How Dockerization helped deployment
 What I learned from GitHub Actions CI/CD automation
 
 Issues faced and how I solved them
+astAPI Secure User + Calculation Model (Module 10 & Module 11)
 
-## Module 11 – Calculation Model and Validation
+This repository contains the implementation for:
 
-This module extends the secure user service by adding a `Calculation` SQLAlchemy model, Pydantic schemas, and tests.
+Module 10: Secure User Management
 
-### Calculation Model
+Module 11: Calculation Model, Pydantic Validation, Factory Pattern, Unit Tests, Integration Tests, and CI/CD with Docker Hub.
 
-- Table: `calculations`
-- Fields:
-  - `id`: integer primary key
-  - `user_id`: optional FK to `users.id`
-  - `a`: float
-  - `b`: float
-  - `type`: enum (`Add`, `Sub`, `Multiply`, `Divide`)
-  - `result`: float (stored result of the operation)
-  - `created_at`: timestamp
+All code is structured using FastAPI, SQLAlchemy, Pydantic, and fully containerized with GitHub Actions CI/CD.
 
-### Pydantic Schemas
+🚀 Module 11 – What Was Added
+1. SQLAlchemy Calculation Model
 
-- `CalculationCreate`: input schema with validation
-  - Ensures that `b != 0` when `type == Divide`.
-- `CalculationRead`: output schema including `id`, `a`, `b`, `type`, `result`, `user_id`, `created_at`.
+Located in: app/models.py
 
-### Calculation Factory
+Fields:
 
-File: `app/services/calculation_factory.py`
+id
 
-- Implements `Add`, `Sub`, `Multiply`, `Divide` operations.
-- `CalculationFactory.get_operation(calc_type)` returns the correct operation object.
+user_id (optional FK)
 
-### Running Tests
+a (float)
 
-```bash
+b (float)
+
+type (enum: ADD, SUBTRACT, MULTIPLY, DIVIDE)
+
+result (optional)
+
+created_at
+
+2. Pydantic Schemas
+
+Located in: app/schemas.py
+
+Schemas created:
+
+CalculationBase
+
+CalculationCreate
+
+CalculationRead
+
+Includes full validation:
+
+No division by zero
+
+Valid calculation types only
+
+Typed inputs for a, b, and type
+
+3. Calculation Factory Pattern
+
+Located in: app/services/calculation_factory.py
+
+Implements:
+
+Add operation
+
+Subtract operation
+
+Multiply operation
+
+Divide operation
+
+Error handling for invalid operations
+
+Factory pattern makes it easy to extend operations later.
+
+4. Testing (Unit + Integration)
+
+Located in: tests/
+
+Added:
+
+test_calculation_unit.py
+
+test_calculation_integration.py
+
+Also includes:
+
+Schema tests
+
+Security tests
+
+User integration tests
+
+All tests pass (12 passed):
+
 pytest -v
 
-This will run both user tests (from Module 10) and the new calculation tests.
+5. CI/CD Pipeline
 
-Docker Hub
+In GitHub Actions:
 
-The GitHub Actions CI/CD pipeline builds and pushes the Docker image to Docker Hub on successful tests.
+Runs unit + integration tests
+
+Builds Docker image using Dockerfile
+
+Pushes image automatically to Docker Hub
+
+Ensures no image is pushed if tests fail
+
+Screenshot provided in /docs/Screenshots.
+
+6. Docker Deployment
+
+Image is automatically pushed to Docker Hub.
+
+Docker Hub Repository:
+https://hub.docker.com/repository/docker/nishitanadimpalli/module10-fastapi-secure-user
+
+Latest image shows:
+“Pushed: a few minutes ago” ✔️
+
+🛠 How to Run Locally
+1. Clone the repository
+git clone https://github.com/nishitanadimpalli/module10-fastapi-secure-user
+cd module10-fastapi-secure-user
+
+2. Create and activate virtual environment
+python3 -m venv venv
+source venv/bin/activate
+
+3. Install dependencies
+pip install -r requirements.txt
+
+4. Run FastAPI
+uvicorn app.main:app --reload
+
+
+Open the API docs:
+👉 http://127.0.0.1:8000/docs
+
+🧪 How to Run Tests
+pytest -v
+
+
+All tests must pass before Docker builds and pushes.
+
+🐳 Docker Instructions
+Pull the image:
+docker pull nishitanadimpalli/module10-fastapi-secure-user:latest
+
+Run the container:
+docker run -p 8000:8000 nishitanadimpalli/module10-fastapi-secure-user
+
+📁 Project Structure (Important)
+app/
+ ├── models.py
+ ├── schemas.py
+ ├── database.py
+ ├── main.py
+ ├── security.py
+ ├── crud_users.py
+ └── services/
+       └── calculation_factory.py
+tests/
+docs/
+Dockerfile
+requirements.txt
+
+📝 Module 11 Reflection
+
+Reflection is included inside:
+
+docs/reflection_module11.md
+
+📤 Submission Requirements Checklist
+✔ GitHub Repo Link
+
+https://github.com/nishitanadimpalli/module10-fastapi-secure-user
+
+✔ GitHub Actions Screenshot
+
+Located in docs/Screenshots/
+
+✔ Docker Hub Screenshot
+
+Located in docs/Screenshots/
+
+✔ Reflection Document
+
+docs/reflection_module11.md
+
+✔ All Tests Passing
+
+pytest -v → 12 passed
